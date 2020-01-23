@@ -1,0 +1,55 @@
+import cv2
+import sys
+import numpy
+def DRW_RCT():
+	for (x, y, w, h) in EYES:
+		cv2.rectangle(IMAGE, (x, y), (x+w, y+h), (0, 255, 0), 2)
+	
+	for (x, y, w, h) in FACES:
+		cv2.rectangle(IMAGE, (x, y), (x+w, y+h), (255, 0, 0), 2)	
+
+def INIT_INF():
+	for (x, y, w, h) in FACES:
+		return x + (w / 2), y + (h / 2)	
+		# Get standart values
+IMAGE_PATH = "face.png"
+FACE_CASC_PATH = "haarcascade_frontalface_default.xml"
+EYE_CASC_PATH = "haarcascade_eye.xml"
+FACE_X = 0
+FACE_Y = 0
+
+# Create the haar cascades
+FACE_CASCADE = cv2.CascadeClassifier(FACE_CASC_PATH)
+EYE_CASCADE = cv2.CascadeClassifier(EYE_CASC_PATH)
+
+# Read the image
+IMAGE = cv2.imread(IMAGE_PATH)
+GRAY = cv2.cvtColor(IMAGE, cv2.COLOR_BGR2GRAY)
+
+# Detect eyes in the image
+EYES = EYE_CASCADE.detectMultiScale(
+	GRAY,
+	scaleFactor=1.1,
+	minNeighbors=5,
+	minSize=(30, 30)
+	#flags = cv2.CV_HAAR_SCALE_IMAGE
+)
+
+# Detect faces in the image
+FACES = FACE_CASCADE.detectMultiScale(
+	GRAY,
+	scaleFactor=1.1,
+	minNeighbors=5,
+	minSize=(5, 5)
+	#flags = cv2.CV_HAAR_SCALE_IMAGE
+)
+
+# Draw a rectangle around the objects
+DRW_RCT()
+
+# Information about objects
+FACE_X, FACE_Y = INIT_INF()
+PRNT_INF()
+
+# End of Program
+END_PRG()
